@@ -1,0 +1,1 @@
+ALTER TABLE "user" ALTER COLUMN "age" SET DATA TYPE double precision;

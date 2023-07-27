@@ -4,20 +4,28 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx src/index.ts",
-    "generate": "drizzle-kit generate:pg"
+    "dev": "dotenv -c -- tsx src/index.ts",
+    "db:drop": "dotenv -c -- tsx src/db/drop.ts",
+    "db:seed": "dotenv -c -- tsx src/db/seed.ts",
+    "db:generateMigrations": "dotenv -c -- drizzle-kit generate:pg",
+    "db:studio": "dotenv -c -- drizzle-kit studio"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ngneat/falso": "^7.0.1",
     "dotenv": "^16.0.3",
-    "drizzle-orm": "^0.23.4",
-    "postgres": "^3.3.3"
+    "dotenv-cli": "^7.2.1",
+    "dotenv-expand": "^10.0.0",
+    "drizzle-orm": "^0.27.2",
+    "pg": "^8.11.1",
+    "postgres": "^3.3.5"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
-    "drizzle-kit": "0.17.1-609a4f0",
+    "drizzle-kit": "0.19.9",
+    "prettier": "^2.8.8",
     "tsx": "^3.12.6",
     "typescript": "^5.0.3"
   }

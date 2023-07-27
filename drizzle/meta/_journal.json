@@ -22,6 +22,62 @@
       "when": 1681250536217,
       "tag": "0002_dapper_secret_warriors",
       "breakpoints": false
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1689859596841,
+      "tag": "0003_rich_stryfe",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1689859834961,
+      "tag": "0004_loose_husk",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1689860230402,
+      "tag": "0005_flawless_russian",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1690493795595,
+      "tag": "0006_young_tarantula",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1690493944150,
+      "tag": "0007_sad_solo",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1690495085269,
+      "tag": "0008_romantic_medusa",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1690496762707,
+      "tag": "0009_gray_adam_warlock",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1690497520906,
+      "tag": "0010_public_yellowjacket",
+      "breakpoints": true
     }
   ]
 }

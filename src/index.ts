@@ -1,36 +1,34 @@
-import "dotenv/config";
-import { drizzle } from "drizzle-orm/postgres-js";
-import { migrate } from "drizzle-orm/postgres-js/migrator";
-import postgres from "postgres";
-import { eq } from "drizzle-orm/pg-core/expressions";
+import { eq, sql } from "drizzle-orm";
 
-import { transaction, user } from "./schema";
-
-const migrationConnection = postgres(process.env.DATABASE_URL!, { max: 1 });
-const queryConnection = postgres(process.env.DATABASE_URL!);
-
-const db = drizzle(queryConnection, { logger: true });
+import { post, user } from "./schema";
+import { db } from "./db/mainDb";
+import { syncDbSchema } from "./db/syncSchema";
 
 const main = async () => {
-  console.log("Starting migration");
-  try {
-    await migrate(drizzle(migrationConnection), {
-      migrationsFolder: "drizzle",
-    });
-    await migrationConnection.end();
-  } catch (e) {
-    console.log(e);
-    return process.exit(1);
-  }
-  console.log("Migrations Done");
+  await syncDbSchema();
 
-  //   await db.insert(user).values([{ name: "alef" }, { name: "bolk" }]);
-  console.log(
-    await db
-      .select()
-      .from(user)
-      .leftJoin(transaction, eq(user.id, transaction.sender))
-  );
+  // const users = await db.select({}).from(user);
+  // .leftJoin(transaction, eq(user.id, transaction.sender));
+
+  // console.log(JSON.stringify(users, null, 2));
+
+  const usersWithPostsAndComments = await db.query.user.findMany({
+    with: {
+      posts: {
+        with: {
+          comments: true,
+        },
+      },
+    },
+    extras: (table) => ({
+      totalPostStars: sql
+        .raw(`sum("user_posts"."starRating")`) // Would love not to hard code this ...
+        .as("totalPostStars"),
+    }),
+  });
+
+  console.log(JSON.stringify(usersWithPostsAndComments, null, 2));
+
   process.exit(0);
 };
 
