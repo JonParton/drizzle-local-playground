@@ -54,12 +54,15 @@ const main = async () => {
 
       await db.insert(post).values(postData).onConflictDoNothing();
 
-      await db.insert(comment).values({
-        postId: postData.id,
-        authorId: userId[0].id,
-        text: "Arn't I great!",
-        id: randUuid(),
-      });
+      await db
+        .insert(comment)
+        .values({
+          postId: postData.id,
+          authorId: userId[0].id,
+          text: "Arn't I great!",
+          id: randUuid(),
+        })
+        .onConflictDoNothing();
     }
   }
 };
