@@ -29,7 +29,9 @@ const main = async () => {
       userType: rand(["admin", "user"]),
       email: randomUser.email,
       age: randNumber({ min: 9, max: 110 }),
+      id: randUuid(),
     };
+    users.push(userData);
     const userId = await db
       .insert(user)
       .values(userData)
@@ -54,15 +56,18 @@ const main = async () => {
 
       await db.insert(post).values(postData).onConflictDoNothing();
 
-      await db
-        .insert(comment)
-        .values({
-          postId: postData.id,
-          authorId: userId[0].id,
-          text: "Arn't I great!",
-          id: randUuid(),
-        })
-        .onConflictDoNothing();
+      for (let i = 0; i < randNumber({ min: 0, max: 20 }); i++) {
+        await db
+          .insert(comment)
+          .values({
+            postId: postData.id,
+            authorId: rand(users.map((user) => user.id)),
+            text: randSentence(),
+            id: randUuid(),
+            userStarRating: randNumber({ min: 0, max: 5, fraction: 1 }),
+          })
+          .onConflictDoNothing();
+      }
     }
   }
 };

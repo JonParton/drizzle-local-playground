@@ -42,6 +42,7 @@ export const comment = pgTable("comments", {
   id: uuid("id").defaultRandom().primaryKey(),
   text: text("text"),
   authorId: uuid("author_id").references(() => user.id),
+  userStarRating: doublePrecision("starRating"),
   postId: uuid("post_id").references(() => post.id),
 });
 
