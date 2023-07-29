@@ -8,7 +8,9 @@
     "db:drop": "dotenv -c -- tsx src/db/drop.ts",
     "db:seed": "dotenv -c -- tsx src/db/seed.ts",
     "db:generateMigrations": "dotenv -c -- drizzle-kit generate:pg",
-    "db:studio": "dotenv -c -- drizzle-kit studio"
+    "db:studio": "dotenv -c -- drizzle-kit studio",
+    "localDB:up": "docker-compose --file database.docker-compose.yml up ",
+    "localDB:down": "docker-compose --file database.docker-compose.yml down "
   },
   "keywords": [],
   "author": "",
