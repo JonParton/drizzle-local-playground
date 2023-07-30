@@ -1,9 +1,9 @@
-import { eq, getTableColumns, sql } from "drizzle-orm";
+import { InferModel, Table, eq, getTableColumns, sql } from "drizzle-orm";
 
 import { comment, post, user } from "./schema";
 import { db } from "./db/mainDb";
 import { syncDbSchema } from "./db/syncSchema";
-import { jsonAgg } from "./db/utils";
+import { jsonAgg, jsonAggSubQuery } from "./db/utils";
 
 const main = async () => {
   await syncDbSchema();
@@ -30,6 +30,9 @@ const main = async () => {
 
   // console.log(JSON.stringify(usersWithPostsAndComments, null, 2));
 
+  //Instead of relying on the relational helpers Drizzle provide, maybe using
+  //the `jsonAgg` helper from
+  //https://gist.github.com/rphlmr/0d1722a794ed5a16da0fdf6652902b15 will help... 🤔
   const postsWithComments = db.$with("postsWithComments").as(
     db
       .select({
@@ -52,7 +55,7 @@ const main = async () => {
       .groupBy(post.id)
   );
 
-  const usersWithPostsAndComments = db
+  const usersWithPostsAndComments = await db
 
     .with(postsWithComments)
     .select({
@@ -72,31 +75,40 @@ const main = async () => {
         sql<number>`sum(${postsWithComments.userStarRating})/sum(${postsWithComments.countOfUserStarRatings})`.as(
           "averageUserCommentRatings"
         ),
-      posts: jsonAgg(postsWithComments as any).as("posts"),
+      posts: jsonAggSubQuery(postsWithComments).as("posts"), // This breaks our typescript here, however the jsonAgg function won't take a sub query only a table... Even though it does actually work runtime wise.
     })
     .from(user)
     .leftJoin(postsWithComments, eq(user.id, postsWithComments.authorId))
     .groupBy(user.id)
     .limit(2);
 
-  console.log(usersWithPostsAndComments.toSQL());
-  console.log();
+  // --------
+  // CURRENT DRIZZLE Q... Trying to get typing correct for say accessing the
+  // property below
+  //usersWithPostsAndComments[0].posts[0].averageUserStarRating
 
-  console.log(JSON.stringify(await usersWithPostsAndComments, null, 2));
+  // OR even accessing the jsonagg'd comments in the sub query itself!
+  //usersWithPostsAndComments[0].posts[0].comments[0].
 
-  const userWithSummaryStats = await db
-    .select({
-      ...getTableColumns(user),
-      averageUserPostRatings: sql<number>`avg(${comment.userStarRating})`.as(
-        "averageUserPostRatings"
-      ),
-    })
-    .from(user)
-    .leftJoin(post, eq(user.id, post.authorId))
-    .leftJoin(comment, eq(post.id, comment.postId))
-    .groupBy(user.id);
+  // --------
 
-  console.log(JSON.stringify(userWithSummaryStats, null, 2));
+  console.log(JSON.stringify(usersWithPostsAndComments, null, 2));
+
+  // As simpler example just using pure SQL to get the summary stats without the
+  // jsonAgg actual data returns.
+  // const userWithSummaryStats = await db
+  //   .select({
+  //     ...getTableColumns(user),
+  //     averageUserPostRatings: sql<number>`avg(${comment.userStarRating})`.as(
+  //       "averageUserPostRatings"
+  //     ),
+  //   })
+  //   .from(user)
+  //   .leftJoin(post, eq(user.id, post.authorId))
+  //   .leftJoin(comment, eq(post.id, comment.postId))
+  //   .groupBy(user.id);
+
+  // console.log(JSON.stringify(userWithSummaryStats, null, 2));
 
   process.exit(0);
 };

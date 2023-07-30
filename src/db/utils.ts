@@ -8,7 +8,9 @@ import {
   sql,
 } from "drizzle-orm";
 
-function jsonAggBuildObject<T extends Record<string, AnyColumn>>(shape: T) {
+export function jsonAggBuildObject<T extends Record<string, AnyColumn>>(
+  shape: T
+) {
   const chunks: SQL[] = [];
   const filters: SQL[] = [];
 
@@ -37,4 +39,10 @@ export function jsonAgg<Table extends AnyTable<TableConfig>>(table: Table) {
   return sql<
     InferModel<Table>[]
   >`coalesce(json_agg(${table}) filter (where ${table} is not null), '[]')`;
+}
+
+export function jsonAggSubQuery<Subquery>(subquery: Subquery) {
+  return sql<
+    Awaited<Subquery>[]
+  >`coalesce(json_agg(${subquery}) filter (where ${subquery} is not null), '[]')`;
 }
