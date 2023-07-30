@@ -43,6 +43,6 @@ export function jsonAgg<Table extends AnyTable<TableConfig>>(table: Table) {
 
 export function jsonAggSubQuery<Subquery>(subquery: Subquery) {
   return sql<
-    Awaited<Subquery>[]
+    Awaited<Subquery>[] // This isn't right! the awaited results of a db query end up including `SQL.Aliased<number>` rather then just `number`
   >`coalesce(json_agg(${subquery}) filter (where ${subquery} is not null), '[]')`;
 }
