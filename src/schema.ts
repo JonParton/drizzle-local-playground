@@ -38,7 +38,7 @@ export const postsRelations = relations(post, ({ one, many }) => ({
   comments: many(comment),
 }));
 
-export const comment = pgTable("comments", {
+export const comment = pgTable("comment", {
   id: uuid("id").defaultRandom().primaryKey(),
   text: text("text"),
   authorId: uuid("author_id").references(() => user.id),

@@ -1,1 +1,0 @@
-ALTER TABLE "comments" ADD COLUMN "starRating" double precision;

@@ -1,40 +1,53 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "3a223fc9-9175-4c1c-a33a-b7deb30fa654",
+  "id": "ba9fed3b-cbfe-4e1b-bbe5-99e8f95e2d96",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "transaction": {
-      "name": "transaction",
+    "comment": {
+      "name": "comment",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
-        "sender_user_id": {
-          "name": "sender_user_id",
-          "type": "integer",
+        "text": {
+          "name": "text",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "recipient_user_id": {
-          "name": "recipient_user_id",
-          "type": "integer",
+        "author_id": {
+          "name": "author_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "starRating": {
+          "name": "starRating",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "post_id": {
+          "name": "post_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "transaction_sender_user_id_user_id_fk": {
-          "name": "transaction_sender_user_id_user_id_fk",
-          "tableFrom": "transaction",
+        "comment_author_id_user_id_fk": {
+          "name": "comment_author_id_user_id_fk",
+          "tableFrom": "comment",
           "tableTo": "user",
           "columnsFrom": [
-            "sender_user_id"
+            "author_id"
           ],
           "columnsTo": [
             "id"
@@ -42,12 +55,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "transaction_recipient_user_id_user_id_fk": {
-          "name": "transaction_recipient_user_id_user_id_fk",
-          "tableFrom": "transaction",
-          "tableTo": "user",
+        "comment_post_id_post_id_fk": {
+          "name": "comment_post_id_post_id_fk",
+          "tableFrom": "comment",
+          "tableTo": "post",
           "columnsFrom": [
-            "recipient_user_id"
+            "post_id"
           ],
           "columnsTo": [
             "id"
@@ -56,7 +69,63 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {}
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "post": {
+      "name": "post",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "starRating": {
+          "name": "starRating",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "body": {
+          "name": "body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "author_id": {
+          "name": "author_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "post_author_id_user_id_fk": {
+          "name": "post_author_id_user_id_fk",
+          "tableFrom": "post",
+          "tableTo": "user",
+          "columnsFrom": [
+            "author_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     },
     "user": {
       "name": "user",
@@ -64,20 +133,49 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "name": {
           "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userType": {
+          "name": "userType",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'user'"
+        },
+        "age": {
+          "name": "age",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {}
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_email_unique": {
+          "name": "user_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      }
     }
   },
   "enums": {},
