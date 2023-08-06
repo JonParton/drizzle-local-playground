@@ -74,6 +74,17 @@ const main = async () => {
         .groupBy("userPosts.author_id")
         .whereRef("user.id", "=", "userPosts.author_id")
         .as("averageUserStarRating"),
+      // Count the number of comment start ratings the user has had.
+      eb
+        .selectFrom("userPosts")
+        .select((subEb) => [
+          sql<number>`sum(${subEb.ref(
+            "userPosts.countOfCommentStarRatings"
+          )})`.as("countOfUserStarRatingInner"),
+        ])
+        .groupBy("userPosts.author_id")
+        .whereRef("user.id", "=", "userPosts.author_id")
+        .as("countOfUserStarRatings"),
     ])
     // Only bring back 3
     .limit(3)
