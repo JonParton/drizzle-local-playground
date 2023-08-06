@@ -13,22 +13,24 @@ const main = async () => {
 
   // console.log(JSON.stringify(users, null, 2));
 
-  // const usersWithPostsAndComments = await db.query.user.findMany({
-  //   with: {
-  //     posts: {
-  //       with: {
-  //         comments: true,
-  //       },
-  //     },
-  //   },
-  //   extras: (table) => ({
-  //     totalPostStars: sql
-  //       .raw(`sum("user_posts"."starRating")`) // Would love not to hard code this ...
-  //       .as("totalPostStars"),
-  //   }),
-  // });
+  const usersWithPostsAndCommentsRelational = await db.query.user.findMany({
+    with: {
+      posts: {
+        with: {
+          comments: true,
+        },
+      },
+    },
+    extras: (table) => ({
+      // totalPostStars: sql
+      //   .raw(`sum("user_posts"."starRating")`) // Would love not to hard code this ...
+      //   .as("totalPostStars"), // You can no longer do this due to the
+      //   lateral join change included as part of the 0.28.0 drizzle release!
+    }),
+    limit: 2,
+  });
 
-  // console.log(JSON.stringify(usersWithPostsAndComments, null, 2));
+  console.log(JSON.stringify(usersWithPostsAndCommentsRelational, null, 2));
 
   //Instead of relying on the relational helpers Drizzle provide, maybe using
   //the `jsonAgg` helper from
