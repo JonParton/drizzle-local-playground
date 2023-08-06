@@ -67,7 +67,7 @@ const main = async () => {
         .select((subEb) => [
           sql<number>`(sum(${subEb.ref(
             "userPosts.sumOfCommentStarRatings"
-          )}) / count(${subEb.ref("userPosts.countOfCommentStarRatings")}))`.as(
+          )}) / sum(${subEb.ref("userPosts.countOfCommentStarRatings")}))`.as(
             "averageUserStarRatingInner"
           ),
         ])
