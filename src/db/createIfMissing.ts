@@ -1,8 +1,9 @@
 import { sql } from "drizzle-orm";
 import { dbMaster } from "./masterDb";
+import { env } from "src/env";
 
 export const createDbIfMissing = async () => {
-  const databaseName = process.env.DATABASE_NAME!;
+  const databaseName = env.DATABASE_NAME!;
 
   const existingDB = await dbMaster.execute<{}>(
     sql`SELECT FROM pg_database WHERE datname = ${databaseName}`
