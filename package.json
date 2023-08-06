@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "dotenv -c -- tsx src/index.ts",
+    "kysley": "dotenv -c -- tsx src/kysley.ts",
     "db:drop": "dotenv -c -- tsx src/db/drop.ts",
     "db:seed": "dotenv -c -- tsx src/db/seed.ts",
     "db:generateMigrations": "dotenv -c -- drizzle-kit generate:pg",
@@ -17,15 +18,19 @@
   "license": "ISC",
   "dependencies": {
     "@ngneat/falso": "^7.0.1",
+    "@t3-oss/env-core": "^0.6.0",
     "dotenv": "^16.0.3",
     "dotenv-cli": "^7.2.1",
     "dotenv-expand": "^10.0.0",
     "drizzle-orm": "^0.27.2",
+    "kysely": "^0.26.1",
     "pg": "^8.11.1",
-    "postgres": "^3.3.5"
+    "postgres": "^3.3.5",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
+    "@types/pg": "^8.10.2",
     "drizzle-kit": "0.19.9",
     "prettier": "^2.8.8",
     "tsx": "^3.12.6",
