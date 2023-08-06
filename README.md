@@ -1,7 +1,7 @@
 # Drizzle Playground
 
-This is a quick repo just to figure out how to get Drizzle set up nicely and
-also play around with it's features.
+This is a quick repo just to figure out how to get Drizzle and Kysley set up nicely and
+also play around with their features.
 
 ## Getting started
 
@@ -18,8 +18,14 @@ then sync and seed the new database with:
 pnpm db:seed
 ```
 
-Then the command below will run the script defined in `./src/index.ts`
+Then the command below will run the drizzle example script defined in `./src/index.ts`
 
 ```shell
 pnpm dev
+```
+
+To see the kysley example use the command below instead to run `./src/kysley.ts`
+
+```shell
+pnpm kysley
 ```
